@@ -8,16 +8,22 @@ import Test from './models/Test';
 import Result from './models/Result';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
 
 // Database connection
-const sequelize = new Sequelize('lab_database', 'root', 'password', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME || 'lab_database',
+  process.env.DB_USER || 'root',
+  process.env.DB_PASSWORD || 'password',
+  {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '3306'),
+    dialect: 'mysql',
+  }
+);
 
 sequelize
   .authenticate()

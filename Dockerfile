@@ -11,11 +11,7 @@ RUN npm install
 # Copiar código fuente
 COPY . .
 
-# Compilar TypeScript
-RUN npm run build
-
-# Exponer puerto
 EXPOSE 3000
 
-# Comando para iniciar la aplicación
-CMD ["npm", "start"]
+# Ejecutar en modo desarrollo con ts-node-dev
+CMD ["npm", "run", "dev"]

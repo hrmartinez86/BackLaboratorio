@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import sequelize, { Lab, User, Study, Test, Result } from './models';
 import userRoutes from './routes/userRoutes';
+import authRoutes from './routes/authRoutes';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -33,6 +34,7 @@ const initializeDatabase = async () => {
 // Initialize and start server
 initializeDatabase().then(() => {
   // Routes
+  app.use('/api/auth', authRoutes);
   app.use('/api/users', userRoutes);
 
   // Health check route
@@ -51,6 +53,9 @@ initializeDatabase().then(() => {
   app.listen(port, () => {
     console.log(`🚀 Server is running on http://localhost:${port}`);
     console.log(`📚 API Documentation:`);
+    console.log(`   POST   /api/auth/login      - User login`);
+    console.log(`   POST   /api/auth/register   - User registration`);
+    console.log(`   GET    /api/auth/me         - Get current user (protected)`);
     console.log(`   POST   /api/users           - Create user`);
     console.log(`   GET    /api/users           - Get all users`);
     console.log(`   GET    /api/users/:id       - Get user by ID`);

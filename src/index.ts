@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import sequelize, { Lab, User, Study, Test, Result } from './models';
 import userRoutes from './routes/userRoutes';
@@ -6,6 +7,17 @@ import authRoutes from './routes/authRoutes';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// CORS Configuration
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 
 // Middleware
 app.use(bodyParser.json());

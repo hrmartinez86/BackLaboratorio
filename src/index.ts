@@ -1,12 +1,14 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import sequelize, { Lab, User, Study, Test, Result } from './models';
+import userRoutes from './routes/userRoutes';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Initialize database
 const initializeDatabase = async () => {
@@ -30,12 +32,29 @@ const initializeDatabase = async () => {
 
 // Initialize and start server
 initializeDatabase().then(() => {
-  // Routes placeholder
+  // Routes
+  app.use('/api/users', userRoutes);
+
+  // Health check route
   app.get('/', (req, res) => {
-    res.send('API is running');
+    res.json({ message: 'API is running' });
+  });
+
+  // 404 handler
+  app.use((req, res) => {
+    res.status(404).json({
+      success: false,
+      message: 'Route not found',
+    });
   });
 
   app.listen(port, () => {
     console.log(`🚀 Server is running on http://localhost:${port}`);
+    console.log(`📚 API Documentation:`);
+    console.log(`   POST   /api/users           - Create user`);
+    console.log(`   GET    /api/users           - Get all users`);
+    console.log(`   GET    /api/users/:id       - Get user by ID`);
+    console.log(`   PUT    /api/users/:id       - Update user`);
+    console.log(`   DELETE /api/users/:id       - Delete user`);
   });
 });

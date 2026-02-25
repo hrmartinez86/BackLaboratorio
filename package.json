@@ -14,11 +14,13 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^5.2.1",
     "mysql2": "^3.17.1",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.6",
     "@types/sequelize": "^4.28.20",
     "ts-node": "^10.9.2",

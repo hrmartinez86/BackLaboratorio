@@ -4,8 +4,21 @@ import bodyParser from 'body-parser';
 import sequelize, { Lab, User, Study, Test, Result } from './models';
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
+import dotenv from 'dotenv';
+import path from 'path';
 
+const envFile = process.env.NODE_ENV === 'development' 
+  ? '.env.development' 
+  : '.env';
+  console.log('Using environment file:', envFile);
+dotenv.config({ path: path.resolve(__dirname, '..', envFile) });
 const app = express();
+console.log('Environment Variables:');
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_PORT:', process.env.DB_PORT);
+console.log('DB_NAME:', process.env.DB_NAME);
+console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 const port = process.env.PORT || 3000;
 
 // CORS Configuration

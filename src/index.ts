@@ -1,11 +1,6 @@
 import express from 'express';
-import { Sequelize } from 'sequelize';
 import bodyParser from 'body-parser';
-import Lab from './models/Lab';
-import User from './models/User';
-import Study from './models/Study';
-import Test from './models/Test';
-import Result from './models/Result';
+import sequelize, { Lab, User, Study, Test, Result } from './models';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -13,33 +8,34 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.json());
 
-// Database connection
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'lab_database',
-  process.env.DB_USER || 'root',
-  process.env.DB_PASSWORD || 'password',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '3306'),
-    dialect: 'mysql',
+// Initialize database
+const initializeDatabase = async () => {
+  try {
+    // Test connection
+    await sequelize.authenticate();
+    console.log('✅ Database connected successfully.');
+    console.log(`   Host: ${process.env.DB_HOST || 'localhost'}`);
+    console.log(`   Port: ${process.env.DB_PORT || 3306}`);
+    console.log(`   Database: ${process.env.DB_NAME || 'lab_database'}`);
+
+    // Sync all models - use force: true to recreate tables (temporary for debugging)
+    await sequelize.sync({ force: false, alter: true });
+    console.log('✅ Database synced successfully. All tables created/updated.');
+    console.log('   Tables: Users, Labs, Studies, Tests, Results');
+  } catch (error) {
+    console.error('❌ Database initialization error:', error);
+    process.exit(1);
   }
-);
+};
 
-sequelize
-  .authenticate()
-  .then(() => console.log('Database connected successfully.'))
-  .catch((err) => console.error('Unable to connect to the database:', err));
+// Initialize and start server
+initializeDatabase().then(() => {
+  // Routes placeholder
+  app.get('/', (req, res) => {
+    res.send('API is running');
+  });
 
-// Sync models with the database
-sequelize.sync({ force: false })
-  .then(() => console.log('Database synced successfully.'))
-  .catch((err) => console.error('Error syncing database:', err));
-
-// Routes placeholder
-app.get('/', (req, res) => {
-  res.send('API is running');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  app.listen(port, () => {
+    console.log(`🚀 Server is running on http://localhost:${port}`);
+  });
 });
